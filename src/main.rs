@@ -1,7 +1,7 @@
 extern crate sfml;
 
-mod timber01;
+mod timber02;
 
 fn main() {
-  timber01::main();
+  timber02::main();
 }
