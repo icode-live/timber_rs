@@ -1,4 +1,4 @@
-#![allow(non_snake_case)] //keeping Cp names for the first few commits
+#![allow(non_snake_case)] //keeping Cpp names for the first few commits
 //Cpp #include <SFML/Graphics.hpp>
 extern crate sfml;
 
@@ -17,7 +17,7 @@ pub fn main () {
     
     // Create a window with the same pixel depth as the desktop
     let desktop = VideoMode::desktop_mode();    
-    let mut window = RenderWindow::new(VideoMode::new(1280, 720, desktop.bits_per_pixel),
+    let mut window = RenderWindow::new(VideoMode::new(1366, 768, desktop.bits_per_pixel),
                                 "Timber!!!",
                                 style::FULLSCREEN,
                                 &Default::default())
@@ -45,8 +45,19 @@ pub fn main () {
 	//Cpp spriteBackground.setPosition(0, 0);
 	spriteBackground.set_position(&Vector2f::new(0.0, 0.0)); // in Transformable
 
+    // Make a tree sprite
+    //Cpp Texture textureTree;
+    let textureTree = Texture::from_file("resources/timber_res/graphics/tree.png").unwrap();
+    //Cpp
+    // Sprite spriteTree;
+    // spriteTree.setTexture(textureTree);
+    // spriteTree.setPosition(810, 0);
+    let mut spriteTree = Sprite::new();
+    spriteTree.set_texture(&textureTree, true);
+    spriteTree.set_position(&Vector2f::new(810.0, 0.0));
 
 	//Cpp while (window.isOpen()){
+    loop {
 		/*
 		****************************************
 		Handle the players input
@@ -57,8 +68,6 @@ pub fn main () {
 		//Cpp {
 		//Cpp 	window.close();
 		//Cpp }
-
-    loop {
         for event in window.events() {
             match event {
                 Event::Closed |
@@ -87,6 +96,7 @@ pub fn main () {
 		// Draw our game scene here
 		//Cpp window.draw(spriteBackground);
 		window.draw(&spriteBackground); //in RenderTarget
+		window.draw(&spriteTree);
 
 		// Show everything we just drew
 		//Cpp window.display(); 
