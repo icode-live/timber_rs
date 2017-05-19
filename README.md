@@ -1,2 +1,4 @@
 # timber_rs
-rust SFML version of timber!!! by John Horton from SFML: Beginning C++ Game Programming
+My rust SFML version of the game timber!!! 
+from the udemy video course and 
+book by John Horton "SFML: Beginning C++ Game Programming"
