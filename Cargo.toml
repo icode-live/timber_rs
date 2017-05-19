@@ -5,7 +5,6 @@ authors = ["lerina <icode.lerina@gmail.com>"]
 keywords = ["sfml", "multimedia", "game"]
 
 [dependencies]
-sfml = "0.12.0"
-rand = "0.3.15"
-#ncollide = "0.10.*"
+sfml = "0.12"
+rand = "0.3"
 #nphysics2d = "0.6"
