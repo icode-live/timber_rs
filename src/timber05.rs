@@ -1,8 +1,11 @@
 #![allow(non_snake_case)] //keeping Cpp names for the first few commits
-extern crate rand;
-extern crate sfml;
+// The crates are in main.rs
+//extern crate rand;
+//extern crate sfml;
 
 use rand::distributions::{IndependentSample, Range};
+//use rand::{thread_rng};
+use rand;
 
 use sfml::graphics::{Color, RenderWindow, RenderTarget, Texture, Transformable, Sprite, FloatRect,
                      View};
@@ -109,7 +112,8 @@ pub fn main() {
 		*/
 
         let dt = clock.restart().as_seconds();
-
+        
+        // Update bee
         if !beeActive {
             // How fast is the bee
             let between = Range::new(200., 400.);
@@ -127,12 +131,88 @@ pub fn main() {
             let mut y = spriteBee.position().y;
             spriteBee.set_position(&Vector2f::new(x as f32, y as f32));
 
-            // Has the bee reached the right edge of the screen?
+            // Has the bee reached the left edge of the screen?
             if spriteBee.position().x < -100.0 {
                 // Set it up ready to be a whole new bee next frame
                 beeActive = false;
             }
         }
+
+        // Update cloud1
+        if !cloud1Active {
+            // How fast is the cloud
+            let between = Range::new(5., 50.);
+            let mut rng = rand::thread_rng();
+            cloud1Speed = between.ind_sample(&mut rng);
+
+            // How high is the cloud
+            let between = Range::new(0., 150.);
+            let height = between.ind_sample(&mut rng);
+            spriteCloud1.set_position(&Vector2f::new(-200.0, height)); //starts off screen
+            cloud1Active = true
+        } else {
+            //Move the cloud
+            let mut x = spriteCloud1.position().x + (cloud1Speed * dt);
+            let mut y = spriteCloud1.position().y;
+            spriteCloud1.set_position(&Vector2f::new(x as f32, y as f32));
+
+            // Has the cloud reached the right edge of the screen?
+            if spriteCloud1.position().x > 1920.0 {
+                // Set it up ready to be a whole new cloud next frame
+                cloud1Active = false;
+            }
+        }
+
+        // Update cloud2
+        if !cloud2Active {
+            // How fast is the cloud
+            let between = Range::new(10., 100.);
+            let mut rng = rand::thread_rng();
+            cloud2Speed = between.ind_sample(&mut rng);
+
+            // How high is the cloud
+            let between = Range::new(150., 300.);
+            let height = between.ind_sample(&mut rng);
+            spriteCloud2.set_position(&Vector2f::new(-200.0, height)); //starts off screen
+            cloud2Active = true
+        } else {
+            //Move the cloud
+            let mut x = spriteCloud2.position().x + (cloud2Speed * dt);
+            let mut y = spriteCloud2.position().y;
+            spriteCloud2.set_position(&Vector2f::new(x as f32, y as f32));
+
+            // Has the cloud reached the right edge of the screen?
+            if spriteCloud2.position().x > 1920.0 {
+                // Set it up ready to be a whole new cloud next frame
+                cloud2Active = false;
+            }
+        }
+
+        // Update cloud3
+        if !cloud3Active {
+            // How fast is the cloud
+            let between = Range::new(30., 200.);
+            let mut rng = rand::thread_rng();
+            cloud3Speed = between.ind_sample(&mut rng);
+
+            // How high is the cloud
+            let between = Range::new(200., 450.);
+            let height = between.ind_sample(&mut rng);
+            spriteCloud3.set_position(&Vector2f::new(-200.0, height)); //starts off screen
+            cloud3Active = true
+        } else {
+            //Move the cloud
+            let mut x = spriteCloud3.position().x + (cloud3Speed * dt);
+            let mut y = spriteCloud3.position().y;
+            spriteCloud3.set_position(&Vector2f::new(x as f32, y as f32));
+
+            // Has the cloud reached the right edge of the screen?
+            if spriteCloud3.position().x > 1920.0 {
+                // Set it up ready to be a whole new cloud next frame
+                cloud3Active = false;
+            }
+        }
+
 
 
         /*
