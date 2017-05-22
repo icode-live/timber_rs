@@ -10,7 +10,7 @@ use rand;
 use sfml::graphics::{Color, RenderWindow, RenderTarget, Texture, Transformable, Sprite, FloatRect,
                      View, RectangleShape, Shape, Text, Font};
 use sfml::window::{Event, Key, style, VideoMode};
-use sfml::system::{Clock, Time, Vector2f};
+use sfml::system::{Clock, Vector2f};
 
 
 pub fn main() {
@@ -88,7 +88,6 @@ pub fn main() {
     let mut clock = Clock::start();
 
 	// Time bar
-
 	let mut timeBar = RectangleShape::new();
 	let timeBarStartWidth = 400.0f32;
 	let timeBarHeight = 80.0f32;
@@ -105,7 +104,7 @@ pub fn main() {
     let mut paused :bool = true;
 
    	// Draw some text
-	let score :i32 = 0;
+	let mut score :i32 = 0;
 
 	// We need to choose a font before we create messageText 
     let font = Font::from_file("resources/timber_res/fonts/KOMIKAP_.ttf").unwrap();
@@ -159,7 +158,11 @@ pub fn main() {
                 Event::Closed |
                 Event::KeyPressed { code: Key::Escape, .. } => return,
                 // Start the game
-                Event::KeyPressed { code: Key::Return, .. } => paused = false,
+                Event::KeyPressed { code: Key::Return, .. } => {
+                    paused = false;
+                    score = 0;
+                    timeRemaining = 5.;
+                },
                 _ => {}
             }
         }
@@ -171,7 +174,29 @@ pub fn main() {
 		*/
         
         if !paused {
-            let mut dt = clock.restart().as_seconds(); 
+            let mut dt = clock.restart().as_seconds();
+
+            // Subtract from the amount of time remaining
+            timeRemaining -= dt; //.asSeconds();
+            // size up the time bar
+            timeBar.set_size(&Vector2f::new(timeBarWidthPerSecond *
+            timeRemaining, timeBarHeight));
+
+            if timeRemaining <= 0.0 {
+                // Pause the game
+                paused = true;
+                // Change the message shown to the player
+                messageText.set_string("Out of time!!");
+                //Reposition the text based on its new size
+                let textRect = messageText.local_bounds();
+                messageText.set_origin(&Vector2f::new(textRect.left +
+                textRect.width / 2.0,
+                textRect.top +
+                textRect.height / 2.0));
+                messageText.set_position(&Vector2f::new(1920. / 2., 1080. / 2.));
+            }
+
+
             // Update bee
             if !beeActive {
                 // How fast is the bee
@@ -271,6 +296,11 @@ pub fn main() {
                     cloud3Active = false;
                 }
             }
+
+            // update the score text
+            score +=1;
+            scoreText.set_string(&format!("Score = {}", score));
+            
         }//end if paused else
 
 
@@ -293,6 +323,9 @@ pub fn main() {
         window.draw(&spriteTree);
 
         window.draw(&spriteBee);
+        
+        window.draw(&scoreText);
+        window.draw(&timeBar);
 
         if paused {
             // Draw the pause message
