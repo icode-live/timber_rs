@@ -2,8 +2,8 @@ extern crate sfml;
 extern crate rand;
 extern crate conv;
 
-mod timber07;
+mod timber08;
 
 fn main() {
-  timber07::main();
+  timber08::main();
 }
