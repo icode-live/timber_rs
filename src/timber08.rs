@@ -236,12 +236,13 @@ pub fn main() {
 	// Control the player input
 	let mut acceptInput :bool = false;
 
-updateBranches(1, &mut branchPositions);
+/*
+    updateBranches(1, &mut branchPositions);
 updateBranches(2, &mut branchPositions);
 updateBranches(3, &mut branchPositions);
 updateBranches(4, &mut branchPositions);
 updateBranches(5, &mut branchPositions);
-
+*/
 
 	// Prepare the sound
 	let chopBuffer = SoundBuffer::from_file("resources/timber_res/sound/chop.wav").unwrap();
@@ -534,6 +535,20 @@ updateBranches(5, &mut branchPositions);
                 }
             }
 
+            // Handle a flying log
+            if logActive {
+                let x = spriteLog.position().x as f32; 
+                let y = spriteLog.position().y as f32; 
+                spriteLog.set_position(&Vector2f::new( x + logSpeedX * dt,
+                                                       y + logSpeedY * dt));
+                // Has the log reached the right hand edge?
+                if spriteLog.position().x < -100. || 
+                   spriteLog.position().x > 2000.  {
+                    // Set it up ready to be a whole new log next frame
+                    logActive = false;
+                    spriteLog.set_position(&Vector2f::new(810., 720.));
+                }
+            }
 
         }//end if paused else
 
