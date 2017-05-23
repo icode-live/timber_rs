@@ -7,4 +7,5 @@ keywords = ["sfml", "multimedia", "game"]
 [dependencies]
 sfml = "0.12"
 rand = "0.3"
+conv = "0.3"
 #nphysics2d = "0.6"
