@@ -276,7 +276,8 @@ updateBranches(5, &mut branchPositions);
 		Handle the players input
 		****************************************
 		*/
-        while let Some(event) = window.poll_event() {
+        let mut event = Some()
+        while event = Some(window.poll_event()) {
             //for event in window.poll_event() {
                 match event {
                     Event::KeyReleased { code: Key::Left, .. } |
