@@ -30,7 +30,7 @@ const NONE :u8 = 2;
 
 fn updateBranches(seed :i32, branchPositions :&mut[u8; NUM_BRANCHES]) {
 	// Move all the branches down one place
-    for j in (1..NUM_BRANCHES-1).rev() {
+    for j in (1..NUM_BRANCHES).rev() {
 		branchPositions[j] = branchPositions[j - 1];
     }
 
@@ -41,14 +41,11 @@ fn updateBranches(seed :i32, branchPositions :&mut[u8; NUM_BRANCHES]) {
     let r = between.ind_sample(&mut rng);
 
 	match r {
-        0 => branchPositions[0] = LEFT,
-        1 => branchPositions[0] = RIGHT,
-        _ => branchPositions[0] = NONE,
+        0  => branchPositions[0] = LEFT,
+        1  => branchPositions[0] = RIGHT,
+        _  => branchPositions[0] = NONE,
 	}
 }
-
-
-
 
 pub fn main() {
     // Create a window with the same pixel depth as the desktop
@@ -243,13 +240,6 @@ pub fn main() {
 	// Control the player input
 	let mut acceptInput :bool = false;
 
-/*
-    updateBranches(1, &mut branchPositions);
-updateBranches(2, &mut branchPositions);
-updateBranches(3, &mut branchPositions);
-updateBranches(4, &mut branchPositions);
-updateBranches(5, &mut branchPositions);
-*/
 
 	// Prepare the sound
 	let chopBuffer = SoundBuffer::from_file("resources/timber_res/sound/chop.wav").unwrap();
@@ -275,25 +265,22 @@ updateBranches(5, &mut branchPositions);
 		****************************************
 		Handle the players input
 		****************************************
-		*/
-        let mut event = Some()
-        while event = Some(window.poll_event()) {
-            //for event in window.poll_event() {
-                match event {
-                    Event::KeyReleased { code: Key::Left, .. } |
-                    Event::KeyReleased { code: Key::Right, .. } if !paused => {
-                    // Listen for key presses again
-                    acceptInput = true;
+		*
+        */
+        while let Some(event) = window.poll_event() {
+            match event {
+                Event::KeyReleased { code: Key::Left, .. } |
+                Event::KeyReleased { code: Key::Right, .. } if !paused==true => {
+                // Listen for key presses again
+                acceptInput = true;
 
-                    // hide the axe
-                    let y = spriteAxe.position().y;
-                    spriteAxe.set_position(&Vector2f::new(2000., y as f32));
-                    },
-                    _ =>{}
-                }
-            //}//end while
+                // hide the axe
+                let y = spriteAxe.position().y;
+                spriteAxe.set_position(&Vector2f::new(2000., y as f32));
+                },
+                _ => {}
+            }
 
-        //for event in window.events() {
             match event {
                 // Exit the game
                 Event::Closed |
@@ -340,7 +327,9 @@ updateBranches(5, &mut branchPositions);
                         spritePlayer.set_position(&Vector2f::new(1200., 720.));
 
                         // update the branches
+                        print!("1. b {:?}", branchPositions);
                         updateBranches(score, &mut branchPositions);
+                        print!("\t2. b {:?}\n", branchPositions);
 
                         // set the log flying to the left
                         spriteLog.set_position(&Vector2f::new(810., 720.));
@@ -350,7 +339,7 @@ updateBranches(5, &mut branchPositions);
                         acceptInput = false;
 
                         // Play a chop sound
-                        chop.play();
+                        //chop.play();
                     },
 
                     // Handle the left cursor key
@@ -380,12 +369,12 @@ updateBranches(5, &mut branchPositions);
                         acceptInput = false;
 
                         // Play a chop sound
-                        chop.play();
+                        //chop.play();
                     },
                     _ => {}
                 }//end match 
             }//end if acceptInput
-        }//end while some event
+        }//end for event
 
         /*
 		****************************************
@@ -414,7 +403,7 @@ updateBranches(5, &mut branchPositions);
                 textRect.top +
                 textRect.height / 2.0));
                 messageText.set_position(&Vector2f::new(1920. / 2., 1080. / 2.));
-                outOfTime.play();
+                //outOfTime.play();
             }
 
 
@@ -529,6 +518,8 @@ updateBranches(5, &mut branchPositions);
                 if branchPositions[i] == LEFT {
                     // Move the sprite to the left side
                     branches[i].set_position(&Vector2f::new(610., height));
+                    
+		            //branches[i].set_origin(&Vector2f::new(220., 40.));
                     // Flip the sprite round the other way
                     branches[i].set_rotation(180.);
                 }
@@ -584,9 +575,8 @@ updateBranches(5, &mut branchPositions);
 				messageText.set_position(&Vector2f::new(1920. / 2.0, 1080. / 2.0));
 
 				// Play the death sound
-				death.play();
+				//death.play();
 			}
-
 
         }//end if paused else
 
