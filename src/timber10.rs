@@ -62,46 +62,42 @@ pub fn main() {
 
     //window.set_framerate_limit(60);
     window.set_vertical_sync_enabled(true);
-
+    
+    //
     // Create a texture to hold a graphic on the GPU
-    // Load a graphic into the texture
+    // 1. Load a graphic into the texture
+    // 2. Create a sprite with the texture
+    //
+    
+    // 1. background texture
     let textureBackground = Texture::from_file("resources/timber_res/graphics/background.png")
-        .unwrap();
+       .unwrap();
 
-    // Create a sprite
-    let mut spriteBackground = make_background(&textureBackground);
+    // 2. Create a sprite background
+    let pos =  Vector2f::new(0.0, 0.0);
+    let mut spriteBackground = make_sprite(&textureBackground, &pos);
 
     // Make a tree sprite
     let textureTree = Texture::from_file("resources/timber_res/graphics/tree.png").unwrap();
+    let pos = Vector2f::new(810.0, 0.0);
+    let mut spriteTree = make_sprite(&textureTree, &pos);
 
-    let mut spriteTree = Sprite::new();
-    spriteTree.set_texture(&textureTree, true);
-    spriteTree.set_position(&Vector2f::new(810.0, 0.0));
-
-    // Make a Bee sprite
+    // Make a Bee sprite    
     let textureBee = Texture::from_file("resources/timber_res/graphics/bee.png").unwrap();
-
-    let mut spriteBee = Sprite::new();
-    spriteBee.set_texture(&textureBee, true);
-    spriteBee.set_position(&Vector2f::new(0.0, 800.0));
-
+    let pos = Vector2f::new(0.0, 800.0);
+    let mut spriteBee = make_sprite(&textureBee, &pos);
     let mut beeActive: bool = false;
     let mut beeSpeed: f32 = 0.0;
 
     // make the clouds
     let textureCloud = Texture::from_file("resources/timber_res/graphics/cloud.png").unwrap();
 
-    let mut spriteCloud1 = Sprite::new();
-    let mut spriteCloud2 = Sprite::new();
-    let mut spriteCloud3 = Sprite::new();
-
-    spriteCloud1.set_texture(&textureCloud, true);
-    spriteCloud2.set_texture(&textureCloud, true);
-    spriteCloud3.set_texture(&textureCloud, true);
-
-    spriteCloud1.set_position(&Vector2f::new(0.0, 0.0));
-    spriteCloud2.set_position(&Vector2f::new(0.0, 150.0));
-    spriteCloud3.set_position(&Vector2f::new(0.0, 200.0));
+    let pos = Vector2f::new(0.0, 0.0);
+    let mut spriteCloud1 = make_sprite(&textureCloud, &pos);
+    let pos = Vector2f::new(0.0, 150.0);
+    let mut spriteCloud2 = make_sprite(&textureCloud, &pos);
+    let pos = Vector2f::new(0.0, 200.0);
+    let mut spriteCloud3 = make_sprite(&textureCloud, &pos);
 
     let mut cloud1Active: bool = false;
     let mut cloud2Active: bool = false;
@@ -264,7 +260,7 @@ pub fn main() {
         while let Some(event) = window.poll_event() {
             match event {
                 Event::KeyReleased { code: Key::Left, .. } |
-                Event::KeyReleased { code: Key::Right, .. } if !paused==true => {
+                Event::KeyReleased { code: Key::Right, .. } if !paused => {
                 // Listen for key presses again
                 acceptInput = true;
 
@@ -323,7 +319,7 @@ pub fn main() {
                         // update the branches
                         print!("1. b {:?}", branchPositions);
                         updateBranches(score, &mut branchPositions);
-                        print!("\t2. b {:?}\n", branchPositions);
+                        println!("\t2. b {:?}", branchPositions);
 
                         // set the log flying to the left
                         spriteLog.set_position(&Vector2f::new(810., 720.));
@@ -623,19 +619,18 @@ pub fn main() {
 }//main
 
 
-fn make_background(textureBackground :&Texture) -> Sprite {
-   // Create a texture to hold a graphic on the GPU
-    // Load a graphic into the texture
+fn make_sprite<'a>(textureBackground :&'a Texture, position: &Vector2f) -> Sprite<'a> {
     //textureBackground = Texture::from_file("resources/timber_res/graphics/background.png").unwrap();
-     // Create a sprite
+    // Create a sprite
     let mut spriteBackground : Sprite = Sprite::new();
-
         
     // Attach the texture to the sprite
     spriteBackground.set_texture(textureBackground, true);
 
     // Set the spriteBackground to cover the screen
-    spriteBackground.set_position(&Vector2f::new(0.0, 0.0)); // in Transformable
+    spriteBackground.set_position(position); // in Transformable
     
     spriteBackground
 }
+
+
