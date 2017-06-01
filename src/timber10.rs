@@ -54,7 +54,7 @@ pub fn main() {
                                        "Timber!!!",
                                        style::FULLSCREEN,
                                        &Default::default())
-            .unwrap();
+                                       .unwrap();
 
     //Low res code :-(
     let view = View::from_rect(&FloatRect::new(0.0, 0.0, 1920.0, 1080.0));
@@ -183,13 +183,13 @@ pub fn main() {
 		branches[i].set_origin(&Vector2f::new(220., 20.));
 	}
 
-
+/*
     let textureTree = Texture::from_file("resources/timber_res/graphics/tree.png").unwrap();
 
     let mut spriteTree = Sprite::new();
     spriteTree.set_texture(&textureTree, true);
     spriteTree.set_position(&Vector2f::new(810.0, 0.0));
-
+*/
 
 	// Prepare the player
 	let texturePlayer = Texture::from_file("resources/timber_res/graphics/player.png").unwrap();
