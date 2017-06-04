@@ -22,29 +22,29 @@ use sfml::system::{Clock, Vector2f};
 use sfml::audio::{Sound, SoundBuffer};
 
 
-const NUM_BRANCHES :usize = 6;
-const LEFT :u8 = 0;
-const RIGHT :u8 = 1;
-const NONE :u8 = 2;
+const NUM_BRANCHES: usize = 6;
+const LEFT: u8 = 0;
+const RIGHT: u8 = 1;
+const NONE: u8 = 2;
 
 
-fn updateBranches(seed :i32, branchPositions :&mut[u8; NUM_BRANCHES]) {
-	// Move all the branches down one place
+fn updateBranches(seed: i32, branchPositions: &mut [u8; NUM_BRANCHES]) {
+    // Move all the branches down one place
     for j in (1..NUM_BRANCHES).rev() {
-		branchPositions[j] = branchPositions[j - 1];
+        branchPositions[j] = branchPositions[j - 1];
     }
 
-	// Spawn a new branch at position 0
-	// LEFT, RIGHT or NONE
+    // Spawn a new branch at position 0
+    // LEFT, RIGHT or NONE
     let between = Range::new(0, seed);
     let mut rng = rand::thread_rng();
     let r = between.ind_sample(&mut rng);
 
-	match r {
-        0  => branchPositions[0] = LEFT,
-        1  => branchPositions[0] = RIGHT,
-        _  => branchPositions[0] = NONE,
-	}
+    match r {
+        0 => branchPositions[0] = LEFT,
+        1 => branchPositions[0] = RIGHT,
+        _ => branchPositions[0] = NONE,
+    }
 }
 
 pub fn main() {
@@ -54,7 +54,7 @@ pub fn main() {
                                        "Timber!!!",
                                        style::FULLSCREEN,
                                        &Default::default())
-                                       .unwrap();
+            .unwrap();
 
     //Low res code :-(
     let view = View::from_rect(&FloatRect::new(0.0, 0.0, 1920.0, 1080.0));
@@ -62,36 +62,36 @@ pub fn main() {
 
     //window.set_framerate_limit(60);
     window.set_vertical_sync_enabled(true);
-    
+
     //
     // Create a texture to hold a graphic on the GPU
     // 1. Load a graphic into the texture
     // 2. Create a sprite with the texture
     //
-    
+
     // 1. background texture
     let textureBackground = Texture::from_file("resources/timber_res/graphics/background.png")
-       .unwrap();
+        .unwrap();
 
     // 2. Create a sprite background
-    let pos =  Vector2f::new(0.0, 0.0);
+    let pos = Vector2f::new(0.0, 0.0);
     let mut spriteBackground = make_sprite(&textureBackground, &pos);
 
     /* call in statics are  limited to constant functions, struct and enums
      * so this version does not work
-    // Make a tree sprite 
+    // Make a tree sprite
     //let textureTree = Texture::from_file("resources/timber_res/graphics/tree.png").unwrap();
     let pos = Vector2f::new(810.0, 0.0);
     let mut spriteTree = make_sprite_static("resources/timber_res/graphics/tree.png", &pos);
     */
-    
+
     // Make a tree sprite
     let textureTree = Texture::from_file("resources/timber_res/graphics/tree.png").unwrap();
     let pos = Vector2f::new(810.0, 0.0);
     let mut spriteTree = make_sprite(&textureTree, &pos);
 
 
-    // Make a Bee sprite    
+    // Make a Bee sprite
     let textureBee = Texture::from_file("resources/timber_res/graphics/bee.png").unwrap();
     let pos = Vector2f::new(0.0, 800.0);
     let mut spriteBee = make_sprite(&textureBee, &pos);
@@ -119,78 +119,78 @@ pub fn main() {
     //
     let mut clock = Clock::start();
 
-	// Time bar
-	let mut timeBar = RectangleShape::new();
-	let timeBarStartWidth = 400.0f32;
-	let timeBarHeight = 80.0f32;
+    // Time bar
+    let mut timeBar = RectangleShape::new();
+    let timeBarStartWidth = 400.0f32;
+    let timeBarHeight = 80.0f32;
 
-	timeBar.set_size(&Vector2f::new(timeBarStartWidth, timeBarHeight));
-	timeBar.set_fill_color(&Color::red());
-	timeBar.set_position(&Vector2f::new((1920. / 2.) - timeBarStartWidth / 2., 980.0));
+    timeBar.set_size(&Vector2f::new(timeBarStartWidth, timeBarHeight));
+    timeBar.set_fill_color(&Color::red());
+    timeBar.set_position(&Vector2f::new((1920. / 2.) - timeBarStartWidth / 2., 980.0));
 
-	//let mut gameTimeTotal = Time::new();
-	let mut timeRemaining = 6.0f32;
-	let timeBarWidthPerSecond :f32 = timeBarStartWidth / timeRemaining;
-    
+    //let mut gameTimeTotal = Time::new();
+    let mut timeRemaining = 6.0f32;
+    let timeBarWidthPerSecond: f32 = timeBarStartWidth / timeRemaining;
+
     // Track whether the game is running
-    let mut paused :bool = true;
+    let mut paused: bool = true;
 
-   	// Draw some text
-	let mut score :i32 = 0;
+    // Draw some text
+    let mut score: i32 = 0;
 
-	// We need to choose a font before we create messageText 
+    // We need to choose a font before we create messageText
     let font = Font::from_file("resources/timber_res/fonts/KOMIKAP_.ttf").unwrap();
 
-	let mut messageText = Text::default();
-	let mut scoreText = Text::default();
-	
+    let mut messageText = Text::default();
+    let mut scoreText = Text::default();
+
     // Set the font to our message
-	messageText.set_font(&font);
-	scoreText.set_font(&font);
+    messageText.set_font(&font);
+    scoreText.set_font(&font);
 
-	// Assign the actual message
-	messageText.set_string("Press Enter to start!");
-	scoreText.set_string("Score = 0");
+    // Assign the actual message
+    messageText.set_string("Press Enter to start!");
+    scoreText.set_string("Score = 0");
 
-	// Make it really big
-	messageText.set_character_size(75);
-	scoreText.set_character_size(100);
+    // Make it really big
+    messageText.set_character_size(75);
+    scoreText.set_character_size(100);
 
-	// Choose a color
-	messageText.set_fill_color(&Color::white());
-	scoreText.set_fill_color(&Color::white());
+    // Choose a color
+    messageText.set_fill_color(&Color::white());
+    scoreText.set_fill_color(&Color::white());
 
-	// Position the text
-	let textRect :FloatRect = messageText.local_bounds();
-	messageText.set_origin(&Vector2f::new(textRect.left +
-                                          textRect.width / 2.0,
-                                          textRect.top +
-                                          textRect.height / 2.0));
+    // Position the text
+    let textRect: FloatRect = messageText.local_bounds();
+    messageText.set_origin(&Vector2f::new(textRect.left + textRect.width / 2.0,
+                                          textRect.top + textRect.height / 2.0));
 
-	messageText.set_position(&Vector2f::new(1920.0 / 2., 1080.0 / 2.));
+    messageText.set_position(&Vector2f::new(1920.0 / 2., 1080.0 / 2.));
 
-	scoreText.set_position(&Vector2f::new(20.0, 20.0));
+    scoreText.set_position(&Vector2f::new(20.0, 20.0));
 
-	// Prepare 5 branches
-	let textureBranch = Texture::from_file("resources/timber_res/graphics/branch.png").unwrap();
+    // Prepare 5 branches
+    let textureBranch = Texture::from_file("resources/timber_res/graphics/branch.png").unwrap();
 
     // arrays of branch sprites.
-    let mut branches :[Sprite; NUM_BRANCHES] = [Sprite::default(), Sprite::default(), 
-                                                Sprite::default(), Sprite::default(), 
-                                                Sprite::default(), Sprite::default() 
-                                               ];
-    
-    let mut branchPositions :[u8; NUM_BRANCHES] = [LEFT; NUM_BRANCHES];
+    let mut branches: [Sprite; NUM_BRANCHES] = [Sprite::default(),
+                                                Sprite::default(),
+                                                Sprite::default(),
+                                                Sprite::default(),
+                                                Sprite::default(),
+                                                Sprite::default()];
 
-	// Set the texture for each branch sprite
-	for i in 0..NUM_BRANCHES {
-		branches[i].set_texture(&textureBranch, true);
-		branches[i].set_position(&Vector2f::new(-2000., -2000.));
+    let mut branchPositions: [u8; NUM_BRANCHES] = [LEFT; NUM_BRANCHES];
 
-		// Set the sprite's origin to dead centre
-		// We can then spin it round without changing its position
-		branches[i].set_origin(&Vector2f::new(220., 20.));
-	}
+    // Set the texture for each branch sprite
+    for i in 0..NUM_BRANCHES {
+        branches[i].set_texture(&textureBranch, true);
+        branches[i].set_position(&Vector2f::new(-2000., -2000.));
+
+        // Set the sprite's origin to dead centre
+        // We can then spin it round without changing its position
+        branches[i].set_origin(&Vector2f::new(220., 20.));
+    }
 
     // Make a tree sprite
     let textureTree = Texture::from_file("resources/timber_res/graphics/tree.png").unwrap();
@@ -198,57 +198,57 @@ pub fn main() {
     let mut spriteTree = make_sprite(&textureTree, &pos);
 
 
-	// Prepare the player
-	let texturePlayer = Texture::from_file("resources/timber_res/graphics/player.png").unwrap();
-	let pos = Vector2f::new(580., 720.);
+    // Prepare the player
+    let texturePlayer = Texture::from_file("resources/timber_res/graphics/player.png").unwrap();
+    let pos = Vector2f::new(580., 720.);
     let mut spritePlayer = make_sprite(&texturePlayer, &pos);
-	// The player starts on the left
-	let mut playerSide = LEFT;
+    // The player starts on the left
+    let mut playerSide = LEFT;
 
-	// Prepare the gravestone
-	let textureRIP = Texture::from_file("resources/timber_res/graphics/rip.png").unwrap();
-	let mut spriteRIP = Sprite::new();
-	spriteRIP.set_texture(&textureRIP, true);
-	spriteRIP.set_position(&Vector2f::new(600., 860.));
+    // Prepare the gravestone
+    let textureRIP = Texture::from_file("resources/timber_res/graphics/rip.png").unwrap();
+    let mut spriteRIP = Sprite::new();
+    spriteRIP.set_texture(&textureRIP, true);
+    spriteRIP.set_position(&Vector2f::new(600., 860.));
 
-	// Prepare the axe
-	let textureAxe = Texture::from_file("resources/timber_res/graphics/axe.png").unwrap();
-	let mut spriteAxe = Sprite::new();
-	spriteAxe.set_texture(&textureAxe, true);
-	spriteAxe.set_position(&Vector2f::new(700., 830.));
+    // Prepare the axe
+    let textureAxe = Texture::from_file("resources/timber_res/graphics/axe.png").unwrap();
+    let mut spriteAxe = Sprite::new();
+    spriteAxe.set_texture(&textureAxe, true);
+    spriteAxe.set_position(&Vector2f::new(700., 830.));
 
-	// Line the axe up with the tree
-	const AXE_POSITION_LEFT :f32 = 700.;
-	const AXE_POSITION_RIGHT :f32 = 1075.;
+    // Line the axe up with the tree
+    const AXE_POSITION_LEFT: f32 = 700.;
+    const AXE_POSITION_RIGHT: f32 = 1075.;
 
-	// Prepare the flying log
-	let textureLog = Texture::from_file("resources/timber_res/graphics/log.png").unwrap();
-	let mut spriteLog = Sprite::new();
-	spriteLog.set_texture(&textureLog, true);
-	spriteLog.set_position(&Vector2f::new(810., 720.));
+    // Prepare the flying log
+    let textureLog = Texture::from_file("resources/timber_res/graphics/log.png").unwrap();
+    let mut spriteLog = Sprite::new();
+    spriteLog.set_texture(&textureLog, true);
+    spriteLog.set_position(&Vector2f::new(810., 720.));
 
-	// Some other useful log related variables
-	let mut logActive :bool = false;
-	let mut logSpeedX :f32 = 1000.;
-	let mut logSpeedY :f32 = -1500.;
+    // Some other useful log related variables
+    let mut logActive: bool = false;
+    let mut logSpeedX: f32 = 1000.;
+    let mut logSpeedY: f32 = -1500.;
 
-	// Control the player input
-	let mut acceptInput :bool = false;
+    // Control the player input
+    let mut acceptInput: bool = false;
 
 
-	// Prepare the sound
-	let chopBuffer = SoundBuffer::from_file("resources/timber_res/sound/chop.wav").unwrap();
-	let mut chop = Sound::with_buffer(&chopBuffer);
+    // Prepare the sound
+    let chopBuffer = SoundBuffer::from_file("resources/timber_res/sound/chop.wav").unwrap();
+    let mut chop = Sound::with_buffer(&chopBuffer);
     //chop.set_buffer(&chopBuffer);
 
-	let deathBuffer = SoundBuffer::from_file("resources/timber_res/sound/death.wav").unwrap();
-	let mut death = Sound::with_buffer(&deathBuffer);
+    let deathBuffer = SoundBuffer::from_file("resources/timber_res/sound/death.wav").unwrap();
+    let mut death = Sound::with_buffer(&deathBuffer);
 
-	// Out of time
-	let ootBuffer = SoundBuffer::from_file("resources/timber_res/sound/out_of_time.wav").unwrap();
-	let mut outOfTime = Sound::with_buffer(&ootBuffer);
+    // Out of time
+    let ootBuffer = SoundBuffer::from_file("resources/timber_res/sound/out_of_time.wav").unwrap();
+    let mut outOfTime = Sound::with_buffer(&ootBuffer);
 
-	
+
     /*
      * GAME LOOP:
      *      H. handle
@@ -266,13 +266,13 @@ pub fn main() {
             match event {
                 Event::KeyReleased { code: Key::Left, .. } |
                 Event::KeyReleased { code: Key::Right, .. } if !paused => {
-                // Listen for key presses again
-                acceptInput = true;
+                    // Listen for key presses again
+                    acceptInput = true;
 
-                // hide the axe
-                let y = spriteAxe.position().y;
-                spriteAxe.set_position(&Vector2f::new(2000., y as f32));
-                },
+                    // hide the axe
+                    let y = spriteAxe.position().y;
+                    spriteAxe.set_position(&Vector2f::new(2000., y as f32));
+                }
                 _ => {}
             }
 
@@ -287,18 +287,18 @@ pub fn main() {
                     timeRemaining = 5.;
 
                     // Make all the branches disappear
-                    for i in 1..NUM_BRANCHES { 
+                    for i in 1..NUM_BRANCHES {
                         branchPositions[i] = NONE;
                     }
-                    
+
                     // Make sure the gravestone is hidden
                     spriteRIP.set_position(&Vector2f::new(675., 2000.));
-                    
+
                     // Move the player into position
                     spritePlayer.set_position(&Vector2f::new(580., 720.));
                     acceptInput = true;
 
-                }, //end Start the game
+                } //end Start the game
                 _ => {}
             }
 
@@ -311,13 +311,12 @@ pub fn main() {
                         // Make sure the player is on the right
                         playerSide = RIGHT;
 
-                        score +=1;
+                        score += 1;
 
                         // Add to the amount of time remaining
                         timeRemaining += (2. / f32::value_from(score).unwrap()) + 0.15;
                         let y = spriteAxe.position().y;
-                        spriteAxe.set_position(&Vector2f::new(AXE_POSITION_RIGHT,
-                                                     y  as f32));
+                        spriteAxe.set_position(&Vector2f::new(AXE_POSITION_RIGHT, y as f32));
 
                         spritePlayer.set_position(&Vector2f::new(1200., 720.));
 
@@ -335,21 +334,20 @@ pub fn main() {
 
                         // Play a chop sound
                         //chop.play();
-                    },
+                    }
 
                     // Handle the left cursor key
                     Event::KeyPressed { code: Key::Left, .. } => {
                         // Make sure the player is on the left
                         playerSide = LEFT;
 
-                        score +=1;
+                        score += 1;
 
                         // Add to the amount of time remaining
                         timeRemaining += (2. / f32::value_from(score).unwrap()) + 0.15;
 
                         let y = spriteAxe.position().y;
-                        spriteAxe.set_position(&Vector2f::new(AXE_POSITION_LEFT,
-                                                      y as f32));
+                        spriteAxe.set_position(&Vector2f::new(AXE_POSITION_LEFT, y as f32));
 
                         spritePlayer.set_position(&Vector2f::new(580., 720.));
 
@@ -365,26 +363,25 @@ pub fn main() {
 
                         // Play a chop sound
                         //chop.play();
-                    },
+                    }
                     _ => {}
-                }//end match 
-            }//end if acceptInput
-        }//end for event
+                } //end match
+            } //end if acceptInput
+        } //end for event
 
         /*
 		****************************************
 		Update the scene
 		****************************************
 		*/
-        
+
         if !paused {
             let dt = clock.restart().as_seconds();
 
             // Subtract from the amount of time remaining
             timeRemaining -= dt; //.asSeconds();
             // size up the time bar
-            timeBar.set_size(&Vector2f::new(timeBarWidthPerSecond *
-            timeRemaining, timeBarHeight));
+            timeBar.set_size(&Vector2f::new(timeBarWidthPerSecond * timeRemaining, timeBarHeight));
 
             if timeRemaining <= 0.0 {
                 // Pause the game
@@ -393,10 +390,8 @@ pub fn main() {
                 messageText.set_string("Out of time!!");
                 //Reposition the text based on its new size
                 let textRect = messageText.local_bounds();
-                messageText.set_origin(&Vector2f::new(textRect.left +
-                textRect.width / 2.0,
-                textRect.top +
-                textRect.height / 2.0));
+                messageText.set_origin(&Vector2f::new(textRect.left + textRect.width / 2.0,
+                                                      textRect.top + textRect.height / 2.0));
                 messageText.set_position(&Vector2f::new(1920. / 2., 1080. / 2.));
                 //outOfTime.play();
             }
@@ -503,28 +498,26 @@ pub fn main() {
             }
 
             // update the score text
-            score +=1;
+            score += 1;
             scoreText.set_string(&format!("Score = {}", score));
-           
+
 
             // update the branch sprites
             for i in 0..NUM_BRANCHES {
-                let height :f32 = f32::value_from(i * 150).unwrap() ;
+                let height: f32 = f32::value_from(i * 150).unwrap();
                 if branchPositions[i] == LEFT {
                     // Move the sprite to the left side
                     branches[i].set_position(&Vector2f::new(610., height));
-                    
-		            //branches[i].set_origin(&Vector2f::new(220., 40.));
+
+                    //branches[i].set_origin(&Vector2f::new(220., 40.));
                     // Flip the sprite round the other way
                     branches[i].set_rotation(180.);
-                }
-                else if branchPositions[i] == RIGHT {
+                } else if branchPositions[i] == RIGHT {
                     // Move the sprite to the right side
                     branches[i].set_position(&Vector2f::new(1330., height));
                     // Set the sprite rotation to normal
                     branches[i].set_rotation(0.);
-                }
-                else {
+                } else {
                     // Hide the branch
                     branches[i].set_position(&Vector2f::new(3000., height));
                 }
@@ -532,13 +525,11 @@ pub fn main() {
 
             // Handle a flying log
             if logActive {
-                let x = spriteLog.position().x as f32; 
-                let y = spriteLog.position().y as f32; 
-                spriteLog.set_position(&Vector2f::new( x + logSpeedX * dt,
-                                                       y + logSpeedY * dt));
+                let x = spriteLog.position().x as f32;
+                let y = spriteLog.position().y as f32;
+                spriteLog.set_position(&Vector2f::new(x + logSpeedX * dt, y + logSpeedY * dt));
                 // Has the log reached the right hand edge?
-                if spriteLog.position().x < -100. || 
-                   spriteLog.position().x > 2000.  {
+                if spriteLog.position().x < -100. || spriteLog.position().x > 2000. {
                     // Set it up ready to be a whole new log next frame
                     logActive = false;
                     spriteLog.set_position(&Vector2f::new(810., 720.));
@@ -547,33 +538,32 @@ pub fn main() {
 
 
             // has the player been squished by a branch?
-			if branchPositions[5] == playerSide {
-				// death
-				paused = true;
-				acceptInput = false;
+            if branchPositions[5] == playerSide {
+                // death
+                paused = true;
+                acceptInput = false;
 
-				// Draw the gravestone
-				spriteRIP.set_position(&Vector2f::new(525., 760.));
+                // Draw the gravestone
+                spriteRIP.set_position(&Vector2f::new(525., 760.));
 
-				// hide the player
-				spritePlayer.set_position(&Vector2f::new(2000., 660.));
+                // hide the player
+                spritePlayer.set_position(&Vector2f::new(2000., 660.));
 
-				// Change the text of the message
-				messageText.set_string("SQUISHED!!");
+                // Change the text of the message
+                messageText.set_string("SQUISHED!!");
 
-				// Center it on the screen
-				let textRect = messageText.local_bounds();
-				messageText.set_origin(&Vector2f::new(textRect.left +
-					textRect.width / 2.0,
-					textRect.top + textRect.height / 2.0));
+                // Center it on the screen
+                let textRect = messageText.local_bounds();
+                messageText.set_origin(&Vector2f::new(textRect.left + textRect.width / 2.0,
+                                                      textRect.top + textRect.height / 2.0));
 
-				messageText.set_position(&Vector2f::new(1920. / 2.0, 1080. / 2.0));
+                messageText.set_position(&Vector2f::new(1920. / 2.0, 1080. / 2.0));
 
-				// Play the death sound
-				//death.play();
-			}
+                // Play the death sound
+                //death.play();
+            }
 
-        }//end if paused else
+        } //end if paused else
 
 
         /*
@@ -607,7 +597,7 @@ pub fn main() {
         window.draw(&spriteRIP);
 
         window.draw(&spriteBee);
-        
+
         window.draw(&scoreText);
         window.draw(&timeBar);
 
@@ -619,42 +609,23 @@ pub fn main() {
         // Show everything we just drew
         window.display();
 
-    }//loop
+    } //loop
 
-}//main
+} //main
 
 
-fn make_sprite<'a>(textureBackground :&'a Texture, position: &Vector2f) -> Sprite<'a> {
-    //textureBackground = Texture::from_file("resources/timber_res/graphics/background.png").unwrap();
+fn make_sprite<'a>(textureBackground: &'a Texture, position: &Vector2f) -> Sprite<'a> {
     // Create a sprite
-    let mut spriteBackground : Sprite = Sprite::new();
-        
+    let mut spriteBackground: Sprite = Sprite::new();
+
     // Attach the texture to the sprite
     spriteBackground.set_texture(textureBackground, true);
 
     // Set the spriteBackground to cover the screen
     spriteBackground.set_position(position); // in Transformable
-    
+
     spriteBackground
 }
 
 
- /* call in statics are  limited to constant functions, struct and enums
-     * so this version does not work
 
-fn make_sprite_static<'a>(targ: &str, position: &Vector2f) -> Sprite<'a> {
-
-    static TEXBCK : &'static Texture = &Texture::from_file("resources/timber_res/graphics/background.png").unwrap();
-
-    // Create a sprite
-    let mut spriteBackground : Sprite = Sprite::new();
-        
-    // Attach the texture to the sprite
-    spriteBackground.set_texture(TEXBCK, true);
-
-    // Set the spriteBackground to cover the screen
-    spriteBackground.set_position(position); // in Transformable
-    
-    spriteBackground
-}
-*/
